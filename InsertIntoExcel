@@ -1,23 +1,22 @@
 /*
- * The purpose of this is to write all information to a file when submit is pressed.
- */
-
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import static java.lang.Integer.parseInt;
 import org.apache.poi.xssf.usermodel.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.*;
 import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
@@ -28,51 +27,294 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class InsertIntoExcel {
     
 
-    
-    public void newWb(String year) throws IOException{
+    //Creates workbook for the year and adds the top line and autosizes cells.
+    public void newWb(String fileName) throws IOException, EncryptedDocumentException, InvalidFormatException{
         
-        XSSFWorkbook wb = new XSSFWorkbook(year + " Teen Challenge Urinalysis");
+       
+        Workbook wb = new XSSFWorkbook();
+        
+        Sheet sheet1 = wb.createSheet("January");
+        setupSheet(sheet1, wb);
+        autosizeColumn(sheet1);
+        
+        Sheet sheet2 = wb.createSheet("February");
+        setupSheet(sheet2, wb);
+        autosizeColumn(sheet2);
+        
+        Sheet sheet3 = wb.createSheet("March");
+        setupSheet(sheet3, wb);
+        autosizeColumn(sheet3);
+        
+        Sheet sheet4 = wb.createSheet("April");
+        setupSheet(sheet4, wb);
+        autosizeColumn(sheet4);
+        
+        Sheet sheet5 = wb.createSheet("May");
+        setupSheet(sheet5, wb);
+        autosizeColumn(sheet5);
+        
+        Sheet sheet6 = wb.createSheet("June");
+        setupSheet(sheet6, wb);
+        autosizeColumn(sheet6);
+        
+        Sheet sheet7 = wb.createSheet("July");
+        setupSheet(sheet7, wb);
+        autosizeColumn(sheet7);
+        
+        Sheet sheet8 = wb.createSheet("August");
+        setupSheet(sheet8, wb);
+        autosizeColumn(sheet8);
+        
+        Sheet sheet9 = wb.createSheet("September");
+        setupSheet(sheet9, wb);
+        autosizeColumn(sheet9);
+        
+        Sheet sheet10 = wb.createSheet("October");
+        setupSheet(sheet10, wb);
+        autosizeColumn(sheet10);
+        
+        Sheet sheet11 = wb.createSheet("November");
+        setupSheet(sheet11, wb);
+        autosizeColumn(sheet11);
+        
+        Sheet sheet12 = wb.createSheet("December");
+        setupSheet(sheet12, wb);
+        autosizeColumn(sheet12);
+        
+        FileOutputStream fileout = new FileOutputStream(fileName + ".xlsx");
+        wb.write(fileout);
+        fileout.flush();
+        fileout.close();
+        wb.close();
        
     }
     
-    public void newSheet(String month, String year) throws IOException{
+    //Sets up sheets with the top row so information is ready to be placed in the sheet.
+    public void setupSheet(Sheet name, Workbook wb) throws IOException, EncryptedDocumentException, InvalidFormatException{
         
-        InputStream input = new FileInputStream(year + " Teen Challenge Urinalysis"+ ".xls");
-        try {
-            
-            Workbook wb = WorkbookFactory.create(input);
-            XSSFSheet sheet = (XSSFSheet) wb.createSheet(month);
-            Map<String, Object[]> data = new TreeMap<String, Object[]>();
-            
-             data.put("1", new Object[] {"Date", "First Name", "Last Name", "EtG", "AMP", "OXY", "BUP", "MDMA", "MTD",
-             "mAMP", "BZO", "THC", "COT", "Coc", "OPI", "Temp", "k2", "Staff Initials", "Student Signature",
-             "Staff Signature", "/n"});
-            
-        } catch (InvalidFormatException | EncryptedDocumentException ex) {
-            Logger.getLogger(InsertIntoExcel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        Sheet sheet = name;
+        CellStyle style = wb.createCellStyle();
+        Row row = sheet.createRow(0);
+        Cell cell1 = row.createCell(0);
+        cell1.setCellValue("Date");
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue("First Name");
+        Cell cell3 = row.createCell(2);
+        cell3.setCellValue("Last Name");
+        Cell cell4 = row.createCell(3);
+        cell4.setCellValue("EtG");
+        Cell cell5 = row.createCell(4);
+        cell5.setCellValue("AMP");
+        Cell cell6 = row.createCell(5);
+        cell6.setCellValue("OXY");
+        Cell cell7 = row.createCell(6);
+        cell7.setCellValue("BUP");
+        Cell cell8 = row.createCell(7);
+        cell8.setCellValue("MDMA");
+        Cell cell9 = row.createCell(8);
+        cell9.setCellValue("MTD");
+        Cell cell10 = row.createCell(9);
+        cell10.setCellValue("mAMP");
+        Cell cell11 = row.createCell(10);
+        cell11.setCellValue("BZO");
+        Cell cell12 = row.createCell(11);
+        cell12.setCellValue("THC");
+        Cell cell13 = row.createCell(12);
+        cell13.setCellValue("COT");
+        Cell cell14 = row.createCell(13);
+        cell14.setCellValue("Coc");
+        Cell cell15 = row.createCell(14);
+        cell15.setCellValue("OPI");
+        Cell cell16 = row.createCell(15);
+        cell16.setCellValue("Temp");
+        Cell cell17 = row.createCell(16);
+        cell17.setCellValue("k2");
+        Cell cell18 = row.createCell(17);
+        cell18.setCellValue("Staff Signature");
+        Cell cell19 = row.createCell(18);
+        cell19.setCellValue("Staff Initials");
+        Cell cell20 = row.createCell(19);
+        cell20.setCellValue("Student Signature");
+        
         
     }
     
-    public void insertData(String date, String firstName, String lastName, boolean EtG, boolean AMP, boolean OXY, boolean BUP, boolean MDMA,
-            boolean MTD, boolean mAMP, boolean BZO, boolean THC, boolean COT, boolean Coc,
-            boolean OPI, boolean Temp, String k2, String staffSig, String staffInitials, String studentSig, 
-            String year, String month) throws FileNotFoundException, IOException{
+    //Sets each column to autosize to its data
+    public void autosizeColumn(Sheet sheet){
         
-        InputStream input = new FileInputStream(year+ " Teen Challenge Urinalysis" + ".xls");
-        try {
-            
-            Workbook wb = WorkbookFactory.create(input);
-            XSSFSheet sheet = (XSSFSheet) wb.createSheet(month);
-            Map<String, Object[]> data = new TreeMap<String, Object[]>();
-            
-             data.put("1", new Object[] {date, firstName, lastName, EtG, AMP, OXY, BUP, MDMA, MTD, mAMP, BZO, THC, COT, 
-                Coc, OPI, Temp, k2, staffInitials, studentSig, staffSig});
-            
-        } catch (InvalidFormatException | EncryptedDocumentException ex) {
-            Logger.getLogger(InsertIntoExcel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
+        sheet.autoSizeColumn(3);
+        sheet.autoSizeColumn(4);
+        sheet.autoSizeColumn(5);
+        sheet.autoSizeColumn(6);
+        sheet.autoSizeColumn(7);
+        sheet.autoSizeColumn(8);
+        sheet.autoSizeColumn(9);
+        sheet.autoSizeColumn(10);
+        sheet.autoSizeColumn(11);
+        sheet.autoSizeColumn(12);
+        sheet.autoSizeColumn(13);
+        sheet.autoSizeColumn(14);
+        sheet.autoSizeColumn(15);
+        sheet.autoSizeColumn(16);
+        sheet.autoSizeColumn(17);
+        sheet.autoSizeColumn(18);
+        sheet.autoSizeColumn(19);
+    }
+    
+    //Will be in charge of putting information into the excel document in the correct place
+    public void insertData(String fileName, String firstName, String lastName, boolean EtG, boolean AMP, 
+            boolean OXY, boolean BUP, boolean MDMA, boolean MTD, boolean mAMP, boolean BZO, boolean THC, 
+            boolean COT, boolean Coc, boolean OPI, boolean Temp, boolean k2, String staffSig, 
+            String staffInitials, String studentSig) throws FileNotFoundException, IOException, InvalidFormatException{
+        
+        File inputFile = new File(fileName + ".xlsx");
+        InputStream fin = new FileInputStream(inputFile);
+        OPCPackage opc = OPCPackage.open(fin);
+        Workbook wb = WorkbookFactory.create(opc);
+        
+        //Selects a sheet based on the month it is using selectSheet()
+        Sheet sheet = wb.getSheet(selectSheet());
+        
+        //Creates a new row        
+        Row row = sheet.createRow(sheet.getLastRowNum()+1);
+  
+        //cell styles
+        CellStyle pass = wb.createCellStyle();
+        pass.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+        CellStyle fail = wb.createCellStyle();
+        fail.setFillForegroundColor(IndexedColors.RED.getIndex());
+        
+        Date date = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Cell cell1 = row.createCell(0);
+        cell1.setCellValue(df.format(date));
+        
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue(firstName);
+        
+        Cell cell3 = row.createCell(2);
+        cell3.setCellValue(lastName);
+        
+        Cell cell4 = row.createCell(3);
+        cell4.setCellValue(passOrFail(EtG));
+        
+        Cell cell5 = row.createCell(4);
+        cell5.setCellValue(passOrFail(AMP));
+        
+        Cell cell6 = row.createCell(5);
+        cell6.setCellValue(passOrFail(OXY));
+        
+        Cell cell7 = row.createCell(6);
+        cell7.setCellValue(passOrFail(BUP));
+        
+        Cell cell8 = row.createCell(7);
+        cell8.setCellValue(passOrFail(MDMA));
+        
+        Cell cell9 = row.createCell(8);
+        cell9.setCellValue(passOrFail(MTD));
+        
+        Cell cell10 = row.createCell(9);
+        cell10.setCellValue(passOrFail(mAMP));
+        
+        Cell cell11 = row.createCell(10);
+        cell11.setCellValue(passOrFail(BZO));
+        
+        Cell cell12 = row.createCell(11);
+        cell12.setCellValue(passOrFail(THC));
+        
+        Cell cell13 = row.createCell(12);
+        cell13.setCellValue(passOrFail(COT));
+        
+        Cell cell14 = row.createCell(13);
+        cell14.setCellValue(passOrFail(Coc));
+        
+        Cell cell15 = row.createCell(14);
+        cell15.setCellValue(passOrFail(OPI));
+        
+        Cell cell16 = row.createCell(15);
+        cell16.setCellValue(passOrFail(Temp));
+        
+        Cell cell17 = row.createCell(16);
+        cell17.setCellValue(passOrFail(k2));
+        
+        Cell cell18 = row.createCell(17);
+        cell18.setCellValue(staffSig);
+        
+        Cell cell19 = row.createCell(18);
+        cell19.setCellValue(staffInitials);
+        
+        Cell cell20 = row.createCell(19);
+        cell20.setCellValue(studentSig);
+        
+        FileOutputStream fileout = new FileOutputStream(fileName + ".xlsx");
+        wb.write(fileout);
+        fileout.flush();
+        fileout.close();
+        wb.close();
         
     }
+    public String selectSheet(){
+        Date monhtDate = new Date();
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+        
+        int monthNum = parseInt(monthFormat.format(monhtDate));
+        String month = "";
+        switch(monthNum){
+            case 1:
+                month= "January";
+                break;
+            case 2:
+                month= "February";
+                break;
+            case 3:
+                month= "March";
+                break;
+            case 4:
+                month= "April";
+                break;
+            case 5:
+                month= "May";
+                break;
+            case 6:
+                month= "June";
+                break;
+            case 7:
+                month= "July";
+                break;
+            case 8:
+                month= "August";
+                break;
+            case 9:
+                month= "September";
+                break;
+            case 10:
+                month= "October";
+                break;
+            case 11:
+                month= "November";
+                break;
+            case 12:
+                month= "December";
+                break;         
+        }
+        return month;
+    }
+    
+    public String passOrFail(boolean drug){
+        
+        String result;
+        if(drug){
+            result = "Pass";
+        }
+        else{
+            result = "Fail";
+        }
+        return result;
+    }
+    
     
 }
