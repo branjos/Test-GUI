@@ -3,18 +3,16 @@
  *  parts of the application face.
  * 
  */
-package bradsapp;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 
 /**
@@ -63,14 +61,16 @@ public class RadioPanel extends JPanel {
     JTextArea staffSig1;
     JTextArea studentSig1;
     ButtonGroup EtGGrp;
+    String fileName = "TC Urinalysis 2016";
+    String sheetName = "";
+    
     
     
     public void init(){
         
         
         JPanel panel = new JPanel(new GridLayout(0,4));
-        
-        
+             
         JLabel name = new JLabel("   First Name: ");
         panel.add(name);
         fName = new JTextArea();
@@ -311,19 +311,53 @@ public class RadioPanel extends JPanel {
         JButton submit = new JButton("Submit");
         panel.add(submit);
         
-        submit.addActionListener(new ActionListener() {
+        submit.addActionListener((ActionEvent e) -> {
+            try {
+                InsertIntoExcel excel = new InsertIntoExcel();
+                excel.insertData(fileName, fName.getText(), lName.getText(), getTF(EtGTrue), getTF(AMPTrue),
+                        getTF(OXYTrue), getTF(BUPTrue), getTF(MDMATrue), getTF(MTDTrue), getTF(mAMPTrue), getTF(BZOTrue),
+                        getTF(THCTrue), getTF(COTTrue), getTF(CocTrue), getTF(OPITrue),
+                        getTF(TempTrue), getTF(k2True), staffSig1.getText(), initials.getText(), studentSig1.getText());
+                
+            } catch (IOException ex) {
+                Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (EncryptedDocumentException ex) {
+                Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidFormatException ex) {
+                Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                System.exit(0);
+            }
+        });
+        JLabel space26 = new JLabel();
+        panel.add(space26);
+        JButton newWorkbook = new JButton("Create New Workbook");
+        panel.add(newWorkbook);
+        newWorkbook.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 
+                
                 try {
-                    checkForFiles();
+                    InsertIntoExcel excel = new InsertIntoExcel();
+                    excel.newWb(fileName);
+                    
                 } catch (IOException ex) {
                     Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (EncryptedDocumentException ex) {
+                    Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidFormatException ex) {
+                    Logger.getLogger(RadioPanel.class.getName()).log(Level.SEVERE, null, ex);
+                } finally{
+                    //System.exit(0);
                 }
  
             }
 
             
         });
+        
+        //ADD POPUP WINDOW GETTING NEW WORKBOOK NAME!!!!!!!!!!!
+        
 
              
         add(panel);
@@ -331,82 +365,16 @@ public class RadioPanel extends JPanel {
         
     }
     
-    String SName;
-    
-    
-    public void write() throws IOException, FileNotFoundException{
+    public boolean getTF(JRadioButton drug){ //checks to see if drugTrue is selected. If not, then returns false.
         
-        InsertIntoExcel excel = new InsertIntoExcel();
-        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
-        Date date = new Date();
-        
-        //sets date items for pulling the month and year for insert data
-        SimpleDateFormat dfmonth = new SimpleDateFormat("MMMM");
-        String month = dfmonth.format(date);
-        SimpleDateFormat dfyear = new SimpleDateFormat("yyyy");
-        String year = dfyear.format(date);
-        
-        //creates strings for data in text boxes
-        String fname = fName.toString();
-        String lname = lName.toString();
-        String k2;
-        String staffSignature = staffSig1.toString();
-        String staffInit = initials.toString();
-        String studentSignature = studentSig1.toString();
-        
-        //because k2 has three options. thanks brad....
-        if(k2True.isSelected()){
-            k2 = "True";
-        }
-        else if(k2False.isSelected()){
-            k2 = "False";
+        boolean result;
+        if(drug.isSelected()){
+            result = true;
         }
         else{
-            k2 ="N/A";
+            result = false;
         }
-        
-        try{
-            excel.insertData(df.format(date), fname, lname, EtGTrue.isSelected(), AMPTrue.isSelected(), OXYTrue.isSelected(),
-                    BUPTrue.isSelected(), MDMATrue.isSelected(), MTDTrue.isSelected(), mAMPTrue.isSelected(), 
-                    BZOTrue.isSelected(), THCTrue.isSelected(), COTTrue.isSelected(), CocTrue.isSelected(), 
-                    OPITrue.isSelected(), TempTrue.isSelected(), k2, staffSignature, staffInit, 
-                    studentSignature, year, month);
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
-        
+        return result;
     }
-    public void checkForFiles() throws IOException{
         
-        Date date = new Date();
-        SimpleDateFormat dfmonth = new SimpleDateFormat("MMMM");
-        String month = dfmonth.format(date);
-        SimpleDateFormat dfyear = new SimpleDateFormat("yyyy");
-        String year = dfyear.format(date);
-        
-        boolean workbook = false;
-        boolean sheet = false;
-        
-        InsertIntoExcel excel = new InsertIntoExcel();
-
-        File file = new File(year + " Teen Challenge Urinalysis.xls");
-        FileInputStream fis = new FileInputStream(year + " Teen Challenge Urinalysis.xls");
-        XSSFWorkbook checkfile = new XSSFWorkbook(fis);
-        if(file.exists()){
-            workbook = true;
-            if(checkfile.getSheetIndex(dfmonth.format(date))>= 0){
-            sheet = true;
-            write();
-            }
-        }
-                
-        else if(workbook == false){
-            excel.newWb(year);
-            excel.newSheet(month, year);
-            write();
-        }
-        
-    }
-    
 }
